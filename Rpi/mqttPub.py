@@ -1,9 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
 
-
-# MQTT_TOPIC = "JM/ALLSENSOR"
-
 client = mqtt.Client()
 
 def publish(broker, MQTT_TOPIC, data):
