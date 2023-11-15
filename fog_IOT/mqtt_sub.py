@@ -14,13 +14,7 @@ MYSQLUSER = "user"
 MYSQLPASSWORD = "root"
 MYSQLDATABASE = "senorData"
 
-# Connect to the MySQL database
-db = pymysql.connect(
-    host=MYSQLHOST,
-    user=MYSQLUSER,
-    password=MYSQLPASSWORD,
-    database=MYSQLDATABASE
-)
+
 # Create a cursor object to interact with the database
 cursor = db.cursor()
 
@@ -35,19 +29,26 @@ def on_message(client, userdata, msg):
     try:
         # Decode the received JSON message
         data = json.loads(msg.payload.decode())
+
+        # Connect to the MySQL database
+        db = pymysql.connect(
+            host=MYSQLHOST,
+            user=MYSQLUSER,
+            password=MYSQLPASSWORD,
+            database=MYSQLDATABASE
+        )
         
         # Store the values in the MySQL database
         insert_query = "INSERT INTO building_sensor_data (lightlevel, co2, temperatureco2, pm2_5, pm10, temperature, humidity, aqi, fetchtime, lat, lon) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        values = (lightlevel, co2, temperatureco2, PM[0], PM[1], temperature, humidity, aqi, int(time.time()), latitude, longitude)
+        values = (data['lightlevel'], data['co2'], data['temperatureco2'], data['pm2_5'], data['pm10'], data['temperature'], data['humidity'], data['aqi'], data['fetchtime'], data['lat'], data['lon'])
         cursor.execute(insert_query, values)
         db.commit()
-        print("Data stored in MySQL database")aqi
+        print("Data stored in MySQL database")
        # Close the cursor and database connection
         cursor.close()
         db.close()
     except Exception as e:
         print(f"Error: {str(e)}")
-        db.rollback()  # Roll back the transaction in case of an error
 
 # Initialize MQTT client
 client = mqtt.Client()
