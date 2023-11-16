@@ -79,4 +79,4 @@ data = {
 }
 print(data)
 # publish("65.2.135.170","JM/ALLSENSOR",data)
-publish("192.168.1.16","ims/sensor",data)
+publish("192.168.1.109","JM/ALLSENSOR",data)
