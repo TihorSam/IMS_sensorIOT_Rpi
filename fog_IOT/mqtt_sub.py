@@ -15,9 +15,6 @@ MYSQLPASSWORD = "root"
 MYSQLDATABASE = "senorData"
 
 
-# Create a cursor object to interact with the database
-cursor = db.cursor()
-
 # MQTT callback when the client connects
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT broker with result code " + str(rc))
@@ -37,7 +34,8 @@ def on_message(client, userdata, msg):
             password=MYSQLPASSWORD,
             database=MYSQLDATABASE
         )
-        
+        # Create a cursor object to interact with the database
+        cursor = db.cursor()
         # Store the values in the MySQL database
         insert_query = "INSERT INTO building_sensor_data (lightlevel, co2, temperatureco2, pm2_5, pm10, temperature, humidity, aqi, fetchtime, lat, lon) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         values = (data['lightlevel'], data['co2'], data['temperatureco2'], data['pm2_5'], data['pm10'], data['temperature'], data['humidity'], data['aqi'], data['fetchtime'], data['lat'], data['lon'])
