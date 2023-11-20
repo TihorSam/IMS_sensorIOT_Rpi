@@ -4,33 +4,29 @@ global mqttclient;
 global broker;
 global port;
 
+# Define MQTT broker information
+MQTT_BROKER_HOST = "192.168.1.109"
+MQTT_BROKER_PORT = 1883
+MQTT_TOPIC = "iot/picow"
 
-broker = "192.168.1.109";
-port = 1883;
-
-client_uniq = "pubclient_123"
-
-mqttclient = paho.Client(client_uniq, True) 
-
-# def test(client, userdata, message):
-#   print("client:"+ str(client))
-#   print("userdata:"+ str(userdata))
-#   print("message:"+ str(message.payload))
+# MQTT callback when the client connects
+def on_connect(client, userdata, flags, rc):
+	print("Connected to MQTT broker with result code " + str(rc))
+	# Subscribe to the MQTT topic
+	client.subscribe(MQTT_TOPIC)
 
 def _on_message(client, userdata, msg):
-# 	print("Received: Topic: %s Body: %s", msg.topic, msg.payload)
+	# print("Received: Topic: %s Body: %s", msg.topic, msg.payload)
 	print(msg.topic+" "+str(msg.payload))
-	 
-#Subscribed Topics 
-def _on_connect(mqttclient, userdata, flags, rc):
-# 	print("New Client: "+str(mqttclient)+ " connected")
-# 	print(rc)
-	mqttclient.subscribe("IOT/#", qos=0)	
-  
-mqttclient.message_callback_add("IOT/pico", test)
 
-mqttclient.connect(broker, port, keepalive=1, bind_address="")
-  
-mqttclient.on_connect = _on_connect
 
-mqttclient.loop_forever()
+# Initialize MQTT client
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+# Connect to MQTT broker
+client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, 60)
+
+# Start the MQTT client loop
+client.loop_forever()
