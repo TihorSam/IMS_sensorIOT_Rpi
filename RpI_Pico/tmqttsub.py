@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 # Define MQTT broker information
 MQTT_BROKER_HOST = "192.168.1.109"
 MQTT_BROKER_PORT = 1883
-MQTT_TOPIC = "iot/picow"
+MQTT_TOPIC = 'iot/remote'
 
 # MQTT callback when the client connects
 def on_connect(client, userdata, flags, rc):
