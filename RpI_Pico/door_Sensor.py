@@ -53,10 +53,11 @@ def message_callback(topic, msg):
     if msg == "open":
         relay_pin.value(1)
         DOOR_STATUS = True
-        print("Remote Command:", msg)
+        print("=> Remote Command: ", msg)
         print("Door status: open")
         time.sleep(10)
         relay_pin.value(0)
+        time.sleep(0.5)
         print("Door status: closed")
         DOOR_STATUS = False
     elif msg != '200':
@@ -68,35 +69,34 @@ def message_callback(topic, msg):
 def door_sensor(IR_value):
     # global DOOR_STATUS
     if IR_value == 0:
+        print("=> Door sensor")
         relay_pin.value(1)
-        DOOR_STATUS = True
-        print("Door sensor")
-        print("Open")
+        # DOOR_STATUS = True
+        print("Door status: open")
         time.sleep(10)
         relay_pin.value(0)
-        DOOR_STATUS = False
-        print("Closed")
+        # DOOR_STATUS = False
+        print("Door status: closed")
         time.sleep(0.5)
         client.publish(topic_remote, 'Door Triggered')
     else:
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 def button_trigger(buttonVal):
     # global DOOR_STATUS
     if buttonVal == 0:
+        print("=> Button Triggered")
         relay_pin.value(1)
-        DOOR_STATUS = True
-        print("Button Triggered")
-        print("Open")
+        # DOOR_STATUS = True
+        print("Door status: open")
         time.sleep(10)
         relay_pin.value(0)
-        DOOR_STATUS = False
-        print("Button Door status: closed")
-        print("Closed")
+        # DOOR_STATUS = False
+        print("Door status: closed")
         time.sleep(0.5)
         client.publish(topic_remote, 'Button Triggered')
     else:
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 
 # Set up MQTT subscription callback
@@ -114,13 +114,28 @@ except OSError as e:
 
 while True:
     # Check IR sensor and button status
-    ir_sensor_value = door_sensor_pin.value()
-    button_value = button_pin.value()
-    door_sensor(ir_sensor_value)
-    button_trigger(button_value)
+    # door_sensor(door_sensor_pin.value())
+    # button_trigger(button_pin.value())
+
+    # # Publish sensor status to another topic
+    # if ir_sensor_value == 1:
+    #     client.publish(topic_remote, 'ir_sensor_triggered')
+    #     print("Open")
+    #     time.sleep(0.1)
+    # if button_value == 0:
+    #     client.publish(topic_remote, 'button_pressed')
+    #     print("Open")
+    #     time.sleep(0.1)
+   
 
     # Check for incoming MQTT messages
     try:
+        ir_sensor_value = door_sensor_pin.value()
+        button_value = button_pin.value()
+
+        door_sensor(ir_sensor_value)
+        button_trigger(button_value)
+
         client.check_msg()
         time.sleep(0.1)
         if (time.time() - last_message) > keep_alive:
