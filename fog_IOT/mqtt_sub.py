@@ -4,9 +4,9 @@ import json
 import pymysql
 
 # Define MQTT broker information
-MQTT_BROKER_HOST = "192.168.1.109"
+MQTT_BROKER_HOST = "192.168.1.16"
 MQTT_BROKER_PORT = 1883
-MQTT_TOPIC = "JM/ALLSENSOR"
+MQTT_TOPIC = "IMS/ALLSENSOR"
 
 # MySQL database configuration
 MYSQLHOST = "localhost"
