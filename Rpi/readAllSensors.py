@@ -6,7 +6,7 @@ from lightsensorRead import readLight
 import mh_z19
 import board, geocoder
 import sds011
-from mqtthelper import publish
+from mqttPub import publish
 from getaqi import calculate_overall_aqi
 
 #Connect and wakeup PM Sensor
@@ -78,5 +78,4 @@ data = {
   'lon':longitude
 }
 print(data)
-# publish("65.2.135.170","JM/ALLSENSOR",data)
-publish("192.168.1.109","JM/ALLSENSOR",data)
+publish("192.168.1.16","IMS/ALLSENSOR",data)
